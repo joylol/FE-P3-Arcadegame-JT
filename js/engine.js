@@ -29,6 +29,8 @@ var Engine = (function(global) {
     canvas.height = 606;
     doc.body.appendChild(canvas);
 
+    
+
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
@@ -67,16 +69,12 @@ var Engine = (function(global) {
         reset();
         lastTime = Date.now();
         main();
+        player.pickCharacter();
     }
 
-    /* This function is called by main (our game loop) and itself calls all
-     * of the functions which may need to update entity's data. Based on how
-     * you implement your collision detection (when two entities occupy the
-     * same space, for instance when your character should die), you may find
-     * the need to add an additional function call here. For now, we've left
-     * it commented out - you may or may not want to implement this
-     * functionality this way (you could just implement collision detection
-     * on the entities themselves within your app.js file).
+    /* This function is called by main (the game loop) and itself calls all
+     * of the functions which may need to update entity's data and checks for
+     * for collision between the player and enemy.
      */
     function update(dt) {
         updateEntities(dt);
@@ -86,17 +84,21 @@ var Engine = (function(global) {
     /* This is called by the update function  and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
-     * player object. These update methods should focus purely on updating
-     * the data/properties related to  the object. Do your drawing in your
-     * render methods.
+     * player object and key object.
      */
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
         player.update();
+        key.update();
+
     }
 
+    /* This is called by the update function and checks for collision between 
+     * player and enemy objects and if there is collision, a point is lost
+     * from scorePoints and player's position is reset.
+    */
     function checkCollisions() {
         allEnemies.forEach(function(enemy) {
             if(
@@ -105,6 +107,7 @@ var Engine = (function(global) {
                 && player.y <= (enemy.y + 50)
                 && enemy.y <= (player.y + 50)
             ) {
+                -- scorePoints;
                 player.reset();
             }
         });
@@ -132,7 +135,7 @@ var Engine = (function(global) {
             numCols = 5,
             row, col;
 
-        /* Loop through the number of rows and columns we've defined above
+        /* Loop through the number of rows and columns defined above
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
          */
@@ -151,6 +154,15 @@ var Engine = (function(global) {
 
 
         renderEntities();
+
+
+        /*This draws the score board.*/
+        ctx.fillStyle = 'rgb(250, 250, 250)';
+        ctx.font = "24px Helvetica";
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText('Keys collected: ' + keysCollected, 10, 580);
+        ctx.fillText('Score: ' + scorePoints, 390, 580);
     }
 
     /* This function is called by the render function and is called on each game
@@ -166,13 +178,28 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+        key.render();
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
+    /* This function resets the game when the reset button is clicked. Scores return 
+     * zero and no character has yet been selected.
      */
     function reset() {
+        var resetButton = document.getElementById('resetButton');
+        var characterChoices = document.getElementById('characterChoices');
+
+        function resetGame() {
+           characterChoices.style.display = 'block'; 
+           resetButton.style.display = 'none';
+           player.sprite = 'images/Selector.png';
+           player.reset();
+           key.reset();
+           scorePoints = 0;
+           keysCollected = 0;
+        }
+
+        resetButton.addEventListener('click', resetGame);
    
     }
 
@@ -185,7 +212,13 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-pink-girl.png'
+        'images/Selector.png',
+        'images/char-pink-girl.png',
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-princess-girl.png',
+        'images/Key.png'
     ]);
     Resources.onReady(init);
 

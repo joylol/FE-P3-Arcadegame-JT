@@ -6,7 +6,36 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <script src="js/resources.js"></script>
+	<header>
+		<h1>Frogger - Lady Bug Style!</h1>
+	</header>
+
+	<section>
+		
+		<div id="gameRules">
+			<h3>How to Play:</h3>
+			<p> Use the arrow keys on your keyboard to move.</p>
+			<p> Collect as many keys as you can and reach the river without getting hit by a ladybug.</p>
+			<p>Get 1 point for each key you collect and 1 point for reaching the river.</p>
+			<p>Lose 1 point if you get hit by a ladybug.</p>
+		</div>
+
+		<div id="characterChoices">
+			<h3>Choose your character:</h3>
+			<img id="pinkgirl" src = "images/char-pink-girl.png">
+			<img id="boy" src = "images/char-boy.png">
+			<img id="catgirl" src ="images/char-cat-girl.png">
+			<img id="horngirl" src = "images/char-horn-girl.png">
+			<img id="princessgirl" src = "images/char-princess-girl.png">
+		</div>
+
+		<div id="resetButton">
+			<input type="button" id="resetGame" value="Reset Game">
+		</div>
+
+	</section>
+
+	<script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
 </body>
